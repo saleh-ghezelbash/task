@@ -19,50 +19,82 @@ export class TaskController {
     //     return await this.tasksService.getAllTasks();
     // }
 
+    /**
+   * This function get all available Tasks
+   * @param search : optional
+   * @param status : optional
+   * @returns tasksService.getAllTasks
+   * creator: s.ghezelbash
+   */
     @Get()
-    getAllTasks(@Query(ValidationPipe) filterDto: GetTaskFilterDto){
+    getAllTasks(@Query(ValidationPipe) filterDto: GetTaskFilterDto) {
         this.logger.verbose('Request For getting all Tasks...')
-        return  this.tasksService.getAllTasks(filterDto);
+        return this.tasksService.getAllTasks(filterDto);
     }
 
+    /**
+     * This function get one Task
+     * @param id
+     * @returns tasksService.getTaskById
+     * creator: s.ghezelbash
+     */
     @Get(':id')
     getTaskById(@Param('id') id: string): Promise<Task> {
         return this.tasksService.getTaskById(id);
     }
 
+    /**
+   * This function create one Task
+   * @param CreateTaskDto
+   * @returns tasksService.createTask
+   * creator: s.ghezelbash
+   */
     @Post()
     @UseGuards(AuthGuard())
     @UsePipes(ValidationPipe)
     async createTask(
         @Body() createTaskDto: CreateTaskDto,
         @GetUser() user: User
-        ): Promise<Task> {
-            console.log('user1:',user);
-            
-        return await this.tasksService.createTask(createTaskDto,user);
+    ): Promise<Task> {
+        console.log('user1:', user);
+
+        return await this.tasksService.createTask(createTaskDto, user);
     }
     // // @Post()
     // // createTask(@Body('title') title: string, @Body('description') description: string): Task {
     // //     return this.tasksService.createTask(title, description);
     // // }
 
+    /**
+    * This function delete one Task
+    * @param id
+    * @returns tasksService.deleteTask
+    * creator: s.ghezelbash
+    */
     @Delete(':id')
-    @UseGuards(AuthGuard())
+    @UseGuards(AuthGuard())    
     deleteTask(
         @Param('id') id: string,
-        @GetUser() user:User
-        ): void {
-            
-        this.tasksService.deleteTask(id,user);
+        @GetUser() user: User
+    ): void {
+
+        this.tasksService.deleteTask(id, user);
     }
 
+    /**
+     * This function update one Task
+     * @param id
+     * @param status
+     * @returns tasksService.updateTaskStatus
+     * creator: s.ghezelbash
+     */
     @Patch(':id/status')
     @UseGuards(AuthGuard())
     async updateTaskStatus(
         @Param('id') id: string,
-         @Body('status', TaskStatusValidationPipe) status: TaskStatus,
-         @GetUser() user:User
-         ): Promise<Task> {
-        return await this.tasksService.updateTaskStatus(id, status,user);
+        @Body('status', TaskStatusValidationPipe) status: TaskStatus,
+        @GetUser() user: User
+    ): Promise<Task> {
+        return await this.tasksService.updateTaskStatus(id, status, user);
     }
 }
